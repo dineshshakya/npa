@@ -100,7 +100,7 @@ footer a{color:#d9d4bf}
     <span><i class="dot booked"></i> Booked</span>
     <span><i class="dot sel"></i> Your pick</span>
   </div>
-  <p style="text-align:center;font-size:.78rem;color:#8a937f;margin:-6px 0 18px">Availability synced with the clinic calendar &middot; Sep 23, 2026</p>
+  <p id="syncNote" style="text-align:center;font-size:.78rem;color:#8a937f;margin:-6px 0 18px">Availability synced with the clinic calendar &middot; Sep 23, 2026</p>
 
   <h2 class="day-title" id="dayTitle"></h2>
   <div class="slot-grid" id="slotGrid" role="group" aria-label="Available times"></div>
@@ -132,6 +132,27 @@ footer a{color:#d9d4bf}
 
   var selectedDate = null;   // Date object
   var selectedSlot = null;   // "HH:MM" 24h
+
+  // ---- Live availability: Google Apps Script web app (clinic deploys it) ----
+  // Paste the web app URL here after deploying apps-script/Code.gs.
+  // Until then the page uses the baked-in snapshot below.
+  var APPS_SCRIPT_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+
+  function backendWired(){
+    return APPS_SCRIPT_URL && APPS_SCRIPT_URL.indexOf('PASTE_') !== 0;
+  }
+
+  function refreshCaption(updatedIso){
+    var note = document.getElementById('syncNote');
+    if(!note) return;
+    var dstr = 'Sep 23, 2026';
+    try{
+      if(updatedIso){
+        dstr = new Date(updatedIso).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+      }
+    }catch(e){}
+    note.innerHTML = 'Availability synced with the clinic calendar &middot; ' + dstr;
+  }
 
   function pad(n){ return (n < 10 ? '0' : '') + n; }
   function dateKey(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
@@ -228,8 +249,23 @@ footer a{color:#d9d4bf}
     window.location.href = 'book.html?step=2';
   });
 
-  buildDates();
-  renderSlots();
+  function loadAvailability(){
+    buildDates();
+    if(!backendWired()){ renderSlots(); return; }
+    fetch(APPS_SCRIPT_URL + '?action=freebusy')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(data && data.ok && Object.prototype.toString.call(data.busy) === '[object Array]'){
+          REAL_BUSY = {};
+          data.busy.forEach(function(k){ REAL_BUSY[k] = true; });
+          refreshCaption(data.updated);
+        }
+        renderSlots();
+      })
+      .catch(function(){ renderSlots(); });
+  }
+
+  loadAvailability();
 })();
 </script>
 </body>
