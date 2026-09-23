@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pick a Time | North Park Acupuncture</title>
+<meta name="description" content="Choose an appointment time at North Park Acupuncture, San Diego.">
+<style>
+:root{
+  --sage:#5f7f63; --sage-dark:#42584a; --sage-deep:#31453a;
+  --cream:#faf8f1; --paper:#ffffff; --ink:#24332a; --ink-soft:#4c5d51;
+  --gold:#c9a86a; --radius:14px; --shadow:0 8px 22px rgba(49,69,58,.10);
+  --avail:#6aa86f; --avail-soft:#e5f1e4; --booked:#d8d3c2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
+h1,h2{font-family:Georgia,"Times New Roman",serif;color:var(--sage-deep);line-height:1.25}
+.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip-link:focus{left:12px;top:12px;width:auto;height:auto;background:var(--sage-deep);color:#fff;padding:10px 16px;border-radius:8px;z-index:100}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+header{position:sticky;top:0;z-index:50;background:rgba(250,248,241,.97);backdrop-filter:blur(6px);border-bottom:1px solid #e4ded0}
+.nav-wrap{max-width:760px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--sage-deep);font-family:Georgia,serif;font-size:1.05rem;font-weight:bold}
+.back-link{color:var(--sage-dark);font-weight:600;text-decoration:none;font-size:.92rem}
+.back-link:hover{text-decoration:underline}
+
+main{max-width:760px;margin:0 auto;padding:28px 18px 120px}
+.page-head{text-align:center;margin-bottom:20px}
+.page-head h1{font-size:1.8rem;margin-bottom:6px}
+.page-head p{color:var(--ink-soft);font-size:.93rem}
+.hours-note{display:inline-block;background:#eef2e7;color:var(--sage-deep);font-weight:700;font-size:.82rem;padding:6px 14px;border-radius:999px;margin-top:10px}
+
+/* Date strip */
+.date-strip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;margin-bottom:6px;-webkit-overflow-scrolling:touch}
+.date-card{flex:0 0 auto;width:74px;padding:10px 6px;border:2px solid #d9d2bc;border-radius:12px;background:#fffdf8;text-align:center;cursor:pointer}
+.date-card .dow{display:block;font-size:.72rem;font-weight:700;color:#8a937f;text-transform:uppercase;letter-spacing:.05em}
+.date-card .dnum{display:block;font-size:1.25rem;font-weight:800;color:var(--sage-deep);margin:2px 0}
+.date-card .dmon{display:block;font-size:.72rem;color:#8a937f}
+.date-card[aria-selected="true"]{border-color:var(--sage);background:var(--avail-soft);box-shadow:var(--shadow)}
+.date-card:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* Legend */
+.legend{display:flex;gap:16px;justify-content:center;margin:6px 0 18px;font-size:.82rem;color:var(--ink-soft);flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:14px;height:14px;border-radius:4px;display:inline-block}
+.dot.avail{background:var(--avail)}
+.dot.booked{background:var(--booked)}
+.dot.sel{background:var(--sage-deep)}
+
+/* Slot grid */
+.slot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(min-width:560px){.slot-grid{grid-template-columns:repeat(4,1fr)}}
+.slot{min-height:52px;border:none;border-radius:10px;font-size:.92rem;font-weight:700;cursor:pointer;background:var(--avail);color:#fff;box-shadow:0 2px 6px rgba(49,69,58,.12)}
+.slot:hover{filter:brightness(1.06)}
+.slot.booked{background:var(--booked);color:#8a937f;cursor:not-allowed;text-decoration:line-through;box-shadow:none}
+.slot.selected{background:var(--sage-deep);color:#fff;box-shadow:0 0 0 3px var(--gold)}
+.slot:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.day-title{font-size:1.05rem;margin:4px 0 12px;text-align:center;color:var(--sage-deep)}
+
+/* Sticky bottom bar */
+.bottom-bar{position:fixed;left:0;right:0;bottom:0;background:rgba(250,248,241,.98);border-top:1px solid #e4ded0;padding:12px 18px;z-index:40}
+.bottom-inner{max-width:760px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between}
+.pick-summary{font-size:.9rem;color:var(--ink-soft)}
+.pick-summary strong{color:var(--sage-deep)}
+.btn{min-height:50px;padding:14px 28px;border-radius:999px;font-weight:700;font-size:1rem;border:none;cursor:pointer;background:var(--sage-dark);color:#fff}
+.btn:hover{background:var(--sage-deep)}
+.btn:disabled{background:#c9c2ab;cursor:not-allowed}
+.btn-ghost{background:transparent;border:2px solid var(--sage-dark);color:var(--sage-deep);padding:12px 22px}
+.btn-ghost:hover{background:var(--sage-dark);color:#fff}
+
+footer{background:var(--sage-deep);color:#c9c4ae;text-align:center;padding:18px;font-size:.82rem}
+footer a{color:#d9d4bf}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header>
+  <div class="nav-wrap">
+    <a class="brand" href="index.html" aria-label="North Park Acupuncture home">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C10 9 6 15 6 21a10 10 0 0 0 20 0c0-6-4-12-10-18z" fill="#5f7f63"/><path d="M16 8v18M10 14l6-4 6 4" stroke="#faf8f1" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+      North Park Acupuncture
+    </a>
+    <a class="back-link" href="book.html">&larr; Back to details</a>
+  </div>
+</header>
+
+<main id="main">
+  <div class="page-head">
+    <h1>Pick a date &amp; time</h1>
+    <p>Choose a day, then tap a green time slot.</p>
+    <span class="hours-note">Open for booking: 8:00 AM – 5:00 PM</span>
+  </div>
+
+  <div class="date-strip" role="listbox" aria-label="Choose a day" id="dateStrip"></div>
+
+  <div class="legend" aria-hidden="true">
+    <span><i class="dot avail"></i> Available</span>
+    <span><i class="dot booked"></i> Booked</span>
+    <span><i class="dot sel"></i> Your pick</span>
+  </div>
+
+  <h2 class="day-title" id="dayTitle"></h2>
+  <div class="slot-grid" id="slotGrid" role="group" aria-label="Available times"></div>
+</main>
+
+<div class="bottom-bar">
+  <div class="bottom-inner">
+    <p class="pick-summary" id="pickSummary">No time selected yet</p>
+    <button class="btn" id="continueBtn" disabled>Next</button>
+  </div>
+</div>
+
+<footer>
+  &copy; 2026 North Park Acupuncture · San Diego, CA · <a href="tel:+16192946616">(619) 294-6616</a>
+</footer>
+
+<script>
+(function(){
+  var OPEN_START = 8 * 60;      // 8:00 AM in minutes
+  var OPEN_END   = 17 * 60;     // 5:00 PM
+  var SLOT_MIN   = 30;
+  var DAYS_AHEAD = 14;
+
+  var strip = document.getElementById('dateStrip');
+  var grid  = document.getElementById('slotGrid');
+  var title = document.getElementById('dayTitle');
+  var summary = document.getElementById('pickSummary');
+  var contBtn = document.getElementById('continueBtn');
+
+  var selectedDate = null;   // Date object
+  var selectedSlot = null;   // "HH:MM" 24h
+
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function dateKey(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+  function fmtTime(mins){
+    var h = Math.floor(mins / 60), m = mins % 60;
+    var ap = h >= 12 ? 'PM' : 'AM';
+    var hh = h % 12; if(hh === 0) hh = 12;
+    return hh + ':' + pad(m) + ' ' + ap;
+  }
+  function slotId(mins){ return pad(Math.floor(mins/60)) + ':' + pad(mins%60); }
+
+  // Deterministic demo "booked" slots, seeded by date, so the grid looks realistic.
+  function hashStr(s){ var h = 0; for(var i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) >>> 0; } return h; }
+  function isBooked(key, mins){
+    var h = hashStr(key + '|' + mins);
+    return (h % 4) === 0; // ~25% booked
+  }
+
+  function buildDates(){
+    var now = new Date();
+    for(var i = 0; i < DAYS_AHEAD; i++){
+      (function(){
+        var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'date-card';
+        btn.setAttribute('role', 'option');
+        btn.setAttribute('aria-selected', 'false');
+        btn.innerHTML =
+          '<span class="dow">' + d.toLocaleDateString('en-US', {weekday:'short'}) + '</span>' +
+          '<span class="dnum">' + d.getDate() + '</span>' +
+          '<span class="dmon">' + d.toLocaleDateString('en-US', {month:'short'}) + '</span>';
+        btn.addEventListener('click', function(){
+          Array.prototype.forEach.call(strip.children, function(c){ c.setAttribute('aria-selected','false'); });
+          btn.setAttribute('aria-selected','true');
+          selectedDate = d; selectedSlot = null;
+          renderSlots();
+        });
+        strip.appendChild(btn);
+        if(i === 0){ btn.setAttribute('aria-selected','true'); selectedDate = d; }
+      })();
+    }
+  }
+
+  function renderSlots(){
+    grid.innerHTML = '';
+    contBtn.disabled = true;
+    summary.textContent = 'No time selected yet';
+    var key = dateKey(selectedDate);
+    title.textContent = selectedDate.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'});
+    var now = new Date();
+    var isToday = dateKey(now) === key;
+    var nowMins = now.getHours() * 60 + now.getMinutes();
+
+    for(var t = OPEN_START; t + SLOT_MIN <= OPEN_END; t += SLOT_MIN){
+      (function(mins){
+        var b = document.createElement('button');
+        b.type = 'button';
+        var id = slotId(mins);
+        b.textContent = fmtTime(mins);
+        b.dataset.slot = id;
+        var past = isToday && mins <= nowMins + 15;
+        var booked = past || isBooked(key, mins);
+        b.className = 'slot' + (booked ? ' booked' : '');
+        b.disabled = booked;
+        b.setAttribute('aria-label', fmtTime(mins) + (booked ? ' (unavailable)' : ' (available)'));
+        b.addEventListener('click', function(){
+          Array.prototype.forEach.call(grid.children, function(c){ c.classList.remove('selected'); });
+          b.classList.add('selected');
+          selectedSlot = id;
+          summary.innerHTML = 'Your pick: <strong>' +
+            selectedDate.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}) +
+            ' at ' + fmtTime(mins) + '</strong>';
+          contBtn.disabled = false;
+        });
+        grid.appendChild(b);
+      })(t);
+    }
+  }
+
+  contBtn.addEventListener('click', function(){
+    if(!selectedDate || !selectedSlot) return;
+    try{
+      var store = JSON.parse(sessionStorage.getItem('npaBooking') || '{}');
+      store.slotDate = dateKey(selectedDate);
+      store.slotDateLabel = selectedDate.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'});
+      store.slotTime = selectedSlot;
+      var mins = parseInt(selectedSlot.split(':')[0],10)*60 + parseInt(selectedSlot.split(':')[1],10);
+      store.slotTimeLabel = fmtTime(mins);
+      sessionStorage.setItem('npaBooking', JSON.stringify(store));
+    }catch(e){}
+    window.location.href = 'book.html?step=2';
+  });
+
+  buildDates();
+  renderSlots();
+})();
+</script>
+</body>
+</html>
