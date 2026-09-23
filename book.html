@@ -266,6 +266,7 @@ footer a{color:#d9d4bf}
       <h2 id="s3h">Review &amp; confirm</h2>
       <p class="step-sub">Step 3 of 3 — check everything looks right.</p>
       <div class="review-box"><dl id="reviewList"></dl></div>
+      <p class="error" id="sendError" style="margin-top:12px"></p>
       <div class="btn-row">
         <button type="button" class="btn btn-ghost" data-back="2">Back</button>
         <button type="submit" class="btn btn-primary">Confirm Request</button>
@@ -298,6 +299,12 @@ footer a{color:#d9d4bf}
   var steps = Array.prototype.slice.call(form.querySelectorAll('.step'));
   var current = 1;
 
+  // ---- Booking backend: Google Apps Script web app (clinic deploys it) ----
+  // Paste the web app URL here after deploying apps-script/Code.gs.
+  // Until then the form shows an honest "not connected yet" message.
+  var APPS_SCRIPT_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+  var NPA_SECRET = 'a83b9e3d1068541a55b9e540c90365ba7bf69b70428abab9';
+
   function saveStep1(){
     try{
       var store = JSON.parse(sessionStorage.getItem('npaBooking') || '{}');
@@ -325,9 +332,10 @@ footer a{color:#d9d4bf}
         var pt = document.getElementById('prefTime');
         if(pt){
           var opt = document.createElement('option');
-          opt.value = store.slotTimeLabel; opt.textContent = store.slotTimeLabel;
+          opt.value = store.slotTime || store.slotTimeLabel; // 24h "HH:MM" for the backend
+          opt.textContent = store.slotTimeLabel;             // friendly "10:30 AM" for humans
           pt.insertBefore(opt, pt.firstChild);
-          pt.value = store.slotTimeLabel;
+          pt.value = opt.value;
         }
       }
     }catch(e){}
@@ -463,13 +471,122 @@ footer a{color:#d9d4bf}
   // Jump to step 2 when returning from the scheduler
   if(params.get('step') === '2'){ show(2); }
 
+  function getFile(id){
+    var el = document.getElementById(id);
+    return (el && el.files && el.files.length) ? el.files[0] : null;
+  }
+
+  // Shrink insurance photos before sending (keeps the request small and fast).
+  function downscaleImage(file){
+    return new Promise(function(resolve){
+      try{
+        var img = new Image();
+        var url = URL.createObjectURL(file);
+        img.onload = function(){
+          try{
+            var max = 800;
+            var scale = Math.min(1, max / Math.max(img.width, img.height));
+            var c = document.createElement('canvas');
+            c.width = Math.max(1, Math.round(img.width * scale));
+            c.height = Math.max(1, Math.round(img.height * scale));
+            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+            URL.revokeObjectURL(url);
+            var parts = c.toDataURL('image/jpeg', 0.6).split(',');
+            resolve({ name: (file.name || 'card').replace(/\.[^.]+$/, '') + '.jpg',
+                      mime: 'image/jpeg', data: parts[1] || '' });
+          }catch(err){ resolve(null); }
+        };
+        img.onerror = function(){ URL.revokeObjectURL(url); resolve(null); };
+        img.src = url;
+      }catch(err){ resolve(null); }
+    });
+  }
+
+  function buildQuery(params){
+    return Object.keys(params).map(function(k){
+      var v = params[k];
+      return encodeURIComponent(k) + '=' + encodeURIComponent(v == null ? '' : v);
+    }).join('&');
+  }
+
+  function sendError(msg){
+    var el = document.getElementById('sendError');
+    el.textContent = msg;
+    el.style.display = 'block';
+    el.scrollIntoView({block:'nearest', behavior:'smooth'});
+  }
+
+  function backendWired(){
+    return APPS_SCRIPT_URL && APPS_SCRIPT_URL.indexOf('PASTE_') !== 0;
+  }
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
-    var name = val('fullName').split(' ')[0] || 'there';
-    document.getElementById('successMsg').textContent =
-      'Thanks ' + name + ' — our office will call you at ' + val('phone') +
-      ' shortly to verify your insurance and confirm your appointment time.';
-    show(4);
+    var btn = form.querySelector('button[type=submit]');
+    var firstName = val('fullName').split(' ')[0] || 'there';
+    var dateVal = document.getElementById('prefDate').value;
+    var timeVal = document.getElementById('prefTime').value;
+    var store = {};
+    try{ store = JSON.parse(sessionStorage.getItem('npaBooking') || '{}'); }catch(err){}
+
+    // Backend not deployed yet: say so honestly — nothing is transmitted.
+    if(!backendWired()){
+      document.getElementById('s4h').textContent = 'Almost done!';
+      document.getElementById('successMsg').textContent =
+        'Thanks ' + firstName + ' — online booking is still being connected, so this request was not sent. ' +
+        'Please call us at (619) 294-6616 to confirm your time, or book directly through Jane below.';
+      show(4);
+      return;
+    }
+
+    // Time must come from the scheduler as 24h "HH:MM".
+    if(!/^\d{2}:\d{2}$/.test(timeVal)){
+      saveStep1();
+      window.location.href = 'schedule.html';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    document.getElementById('sendError').style.display = 'none';
+
+    var pt = form.querySelector('input[name=patientType]:checked');
+    var front = getFile('insFront'), back = getFile('insBack');
+    Promise.all([
+      front ? downscaleImage(front) : Promise.resolve(null),
+      back ? downscaleImage(back) : Promise.resolve(null)
+    ]).then(function(imgs){
+      var q = {
+        action: 'book', secret: NPA_SECRET,
+        name: val('fullName'), dob: val('dob'), phone: val('phone'), email: val('email'),
+        street: val('street'), city: val('city'), state: val('state'), zip: val('zip'),
+        patientType: pt ? pt.value : '', reason: val('reason'),
+        date: dateVal, time: timeVal, notes: val('notes')
+      };
+      if(imgs[0] && imgs[0].data){ q.insFront = imgs[0].data; q.insFrontName = imgs[0].name; q.insFrontMime = imgs[0].mime; }
+      if(imgs[1] && imgs[1].data){ q.insBack = imgs[1].data; q.insBackName = imgs[1].name; q.insBackMime = imgs[1].mime; }
+      return fetch(APPS_SCRIPT_URL + '?' + buildQuery(q));
+    }).then(function(resp){
+      if(!resp.ok) throw new Error('network error ' + resp.status);
+      return resp.json();
+    }).then(function(data){
+      if(data && data.ok){
+        var when = (store.slotDateLabel || dateVal) + ' at ' + (store.slotTimeLabel || timeVal);
+        document.getElementById('s4h').textContent = 'Request sent!';
+        document.getElementById('successMsg').textContent =
+          'Thanks ' + firstName + ' — your request for ' + when +
+          ' was sent to the clinic. We\u2019ll call you at ' + val('phone') + ' to confirm.';
+        try{ sessionStorage.removeItem('npaBooking'); }catch(err){}
+        show(4);
+      } else {
+        throw new Error((data && data.error) || 'the clinic did not accept the request');
+      }
+    }).catch(function(err){
+      btn.disabled = false;
+      btn.textContent = 'Confirm Request';
+      sendError('Couldn\u2019t send your request (' + (err && err.message ? err.message : 'network error') +
+        '). Please call us at (619) 294-6616 or book directly through Jane below.');
+    });
   });
 })();
 </script>
