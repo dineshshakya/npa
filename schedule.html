@@ -100,6 +100,7 @@ footer a{color:#d9d4bf}
     <span><i class="dot booked"></i> Booked</span>
     <span><i class="dot sel"></i> Your pick</span>
   </div>
+  <p style="text-align:center;font-size:.78rem;color:#8a937f;margin:-6px 0 18px">Availability synced with the clinic calendar &middot; Sep 23, 2026</p>
 
   <h2 class="day-title" id="dayTitle"></h2>
   <div class="slot-grid" id="slotGrid" role="group" aria-label="Available times"></div>
@@ -142,11 +143,13 @@ footer a{color:#d9d4bf}
   }
   function slotId(mins){ return pad(Math.floor(mins/60)) + ':' + pad(mins%60); }
 
-  // Deterministic demo "booked" slots, seeded by date, so the grid looks realistic.
-  function hashStr(s){ var h = 0; for(var i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) >>> 0; } return h; }
+  // Real availability snapshot from the clinic calendar (npacupuncturetest@gmail.com),
+  // pulled 2026-09-23. Keys are "YYYY-MM-DD|HH:MM" start times that are booked.
+  // Free/busy only — no event details are stored or shown.
+  var REAL_BUSY = {
+  };
   function isBooked(key, mins){
-    var h = hashStr(key + '|' + mins);
-    return (h % 4) === 0; // ~25% booked
+    return Object.prototype.hasOwnProperty.call(REAL_BUSY, key + '|' + slotId(mins));
   }
 
   function buildDates(){
