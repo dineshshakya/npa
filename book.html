@@ -522,6 +522,14 @@ footer a{color:#d9d4bf}
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
+
+    // Re-validate every step before sending. The Next buttons check their
+    // own step, but a direct submit (e.g. pressing Enter in a field) skips
+    // those checks entirely — without this, empty fields would be sent.
+    for(var s = 1; s <= 3; s++){
+      if(!validateStep(s)){ show(s); return; }
+    }
+
     var btn = form.querySelector('button[type=submit]');
     var firstName = val('fullName').split(' ')[0] || 'there';
     var dateVal = document.getElementById('prefDate').value;
