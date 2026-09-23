@@ -200,7 +200,7 @@ footer a{color:#d9d4bf}
       </div>
 
       <div class="btn-row">
-        <button type="button" class="btn btn-primary" data-next="2">Next</button>
+        <button type="button" class="btn btn-primary" id="toSchedule">Next</button>
       </div>
     </div>
 
@@ -297,6 +297,47 @@ footer a{color:#d9d4bf}
   var form = document.getElementById('bookForm');
   var steps = Array.prototype.slice.call(form.querySelectorAll('.step'));
   var current = 1;
+
+  function saveStep1(){
+    try{
+      var store = JSON.parse(sessionStorage.getItem('npaBooking') || '{}');
+      ['fullName','dob','phone','email','street','city','state','zip','reason','prefTime','notes'].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) store[id] = el.value;
+      });
+      sessionStorage.setItem('npaBooking', JSON.stringify(store));
+    }catch(e){}
+  }
+
+  function restoreAll(){
+    try{
+      var store = JSON.parse(sessionStorage.getItem('npaBooking') || '{}');
+      Object.keys(store).forEach(function(k){
+        var el = document.getElementById(k);
+        if(el && typeof store[k] === 'string') el.value = store[k];
+      });
+      // Prefill preferred date/time from the scheduler pick
+      if(store.slotDate){
+        var pd = document.getElementById('prefDate');
+        if(pd) pd.value = store.slotDate;
+      }
+      if(store.slotTimeLabel){
+        var pt = document.getElementById('prefTime');
+        if(pt){
+          var opt = document.createElement('option');
+          opt.value = store.slotTimeLabel; opt.textContent = store.slotTimeLabel;
+          pt.insertBefore(opt, pt.firstChild);
+          pt.value = store.slotTimeLabel;
+        }
+      }
+    }catch(e){}
+  }
+
+  // Returning from the scheduler: jump straight to Visit details
+  var params = new URLSearchParams(window.location.search);
+  if(params.get('step') === '2'){
+    restoreAll();
+  }
 
   // Date bounds: DOB cannot be in the future; preferred date cannot be in the past
   var today = new Date().toISOString().split('T')[0];
@@ -398,6 +439,14 @@ footer a{color:#d9d4bf}
   }
 
   form.addEventListener('click', function(e){
+    var toSched = e.target.closest('#toSchedule');
+    if(toSched){
+      if(validateStep(1)){
+        saveStep1();
+        window.location.href = 'schedule.html';
+      }
+      return;
+    }
     var next = e.target.closest('[data-next]');
     var back = e.target.closest('[data-back]');
     if(next){
@@ -410,6 +459,9 @@ footer a{color:#d9d4bf}
       show(parseInt(back.getAttribute('data-back'), 10));
     }
   });
+
+  // Jump to step 2 when returning from the scheduler
+  if(params.get('step') === '2'){ show(2); }
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
