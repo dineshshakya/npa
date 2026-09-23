@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book an Appointment | North Park Acupuncture</title>
+<meta name="description" content="Request an appointment at North Park Acupuncture, San Diego.">
+<style>
+:root{
+  --sage:#5f7f63; --sage-dark:#42584a; --sage-deep:#31453a;
+  --cream:#faf8f1; --paper:#ffffff; --ink:#24332a; --ink-soft:#4c5d51;
+  --gold:#c9a86a; --radius:14px; --shadow:0 8px 22px rgba(49,69,58,.10);
+  --danger:#a33b3b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
+h1,h2{font-family:Georgia,"Times New Roman",serif;color:var(--sage-deep);line-height:1.25}
+.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip-link:focus{left:12px;top:12px;width:auto;height:auto;background:var(--sage-deep);color:#fff;padding:10px 16px;border-radius:8px;z-index:100}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+header{position:sticky;top:0;z-index:50;background:rgba(250,248,241,.97);backdrop-filter:blur(6px);border-bottom:1px solid #e4ded0}
+.nav-wrap{max-width:760px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--sage-deep);font-family:Georgia,serif;font-size:1.05rem;font-weight:bold}
+.back-link{color:var(--sage-dark);font-weight:600;text-decoration:none;font-size:.92rem}
+.back-link:hover{text-decoration:underline}
+
+main{max-width:760px;margin:0 auto;padding:32px 18px 48px}
+.page-head{text-align:center;margin-bottom:22px}
+.page-head h1{font-size:1.9rem;margin-bottom:6px}
+.page-head p{color:var(--ink-soft);font-size:.95rem}
+
+/* Progress stepper */
+.progress{display:flex;justify-content:center;gap:0;margin-bottom:26px;list-style:none}
+.progress li{flex:1;max-width:170px;text-align:center;position:relative;font-size:.78rem;font-weight:700;color:#9aa392;padding-top:30px}
+.progress li::before{content:attr(data-n);position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;background:#ddd5bf;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.progress li::after{content:"";position:absolute;top:14px;left:calc(-50% + 18px);right:calc(50% + 18px);height:2px;background:#ddd5bf}
+.progress li:first-child::after{display:none}
+.progress li.active{color:var(--sage-deep)}
+.progress li.active::before{background:var(--sage)}
+.progress li.done{color:var(--sage-dark)}
+.progress li.done::before{background:var(--sage-dark);content:"✓"}
+.progress li.done::after{background:var(--sage)}
+
+.card{background:var(--paper);border-radius:var(--radius);padding:26px 22px;box-shadow:var(--shadow);border-top:4px solid var(--sage)}
+.step{display:none}
+.step.current{display:block}
+.step h2{font-size:1.3rem;margin-bottom:4px}
+.step .step-sub{color:var(--ink-soft);font-size:.88rem;margin-bottom:18px}
+
+.field{margin-bottom:16px}
+.field-row{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:560px){.field-row.two{grid-template-columns:1fr 1fr}.field-row.three{grid-template-columns:2fr 1fr 1fr}}
+label{display:block;font-weight:700;font-size:.88rem;margin-bottom:6px}
+label .req{color:var(--danger)}
+input[type=text],input[type=tel],input[type=email],input[type=date],select,textarea{width:100%;padding:12px 14px;border:2px solid #d9d2bc;border-radius:10px;font-size:1rem;font-family:inherit;background:#fffdf8;color:var(--ink)}
+input:focus,select:focus,textarea:focus{border-color:var(--sage);outline:none;box-shadow:0 0 0 3px rgba(95,127,99,.2)}
+textarea{min-height:90px;resize:vertical}
+.hint{font-size:.78rem;color:#8a937f;margin-top:4px}
+.error{font-size:.8rem;color:var(--danger);margin-top:4px;display:none}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--danger)}
+.field.invalid .error{display:block}
+
+.radio-row{display:flex;gap:10px;flex-wrap:wrap}
+.radio-pill{position:relative}
+.radio-pill input{position:absolute;opacity:0}
+.radio-pill span{display:inline-block;padding:10px 18px;border:2px solid #d9d2bc;border-radius:999px;font-weight:600;font-size:.9rem;cursor:pointer;background:#fffdf8}
+.radio-pill input:checked + span{border-color:var(--sage);background:#eef2e7;color:var(--sage-deep)}
+.radio-pill input:focus-visible + span{outline:3px solid var(--gold);outline-offset:2px}
+
+.upload-box{border:2px dashed #c9c0a6;border-radius:10px;padding:18px;text-align:center;background:#fffdf8;cursor:pointer}
+.upload-box:hover{border-color:var(--sage)}
+.upload-box input{position:absolute;opacity:0;width:1px;height:1px}
+.upload-box strong{display:block;font-size:.9rem;margin-bottom:4px}
+.upload-box small{color:#8a937f;font-size:.78rem}
+.file-name{font-size:.82rem;color:var(--sage-dark);font-weight:700;margin-top:8px;display:none}
+
+.btn-row{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+.btn{flex:1;min-height:50px;padding:14px 20px;border-radius:999px;font-weight:700;font-size:1rem;border:none;cursor:pointer;text-align:center;text-decoration:none;display:inline-block}
+.btn-primary{background:var(--sage-dark);color:#fff}
+.btn-primary:hover{background:var(--sage-deep)}
+.btn-ghost{background:transparent;border:2px solid var(--sage-dark);color:var(--sage-deep);flex:0 1 auto;padding:14px 26px}
+.btn-ghost:hover{background:var(--sage-dark);color:#fff}
+
+.review-box{background:#f6f4ec;border-radius:10px;padding:16px;margin-bottom:8px}
+.review-box dl{display:grid;grid-template-columns:130px 1fr;gap:6px 12px;font-size:.9rem}
+.review-box dt{font-weight:700;color:var(--sage-deep)}
+.review-box dd{color:var(--ink-soft);word-break:break-word}
+
+.success{text-align:center;padding:16px 6px}
+.success .check{width:72px;height:72px;border-radius:50%;background:var(--sage);color:#fff;font-size:2.2rem;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px}
+.success h2{margin-bottom:10px}
+.success p{color:var(--ink-soft);margin-bottom:8px}
+.success .btn{margin-top:16px;flex:none}
+
+.alt-path{text-align:center;margin-top:20px;font-size:.88rem;color:var(--ink-soft)}
+.alt-path a{color:var(--sage-dark);font-weight:700}
+.privacy{font-size:.78rem;color:#8a937f;text-align:center;margin-top:16px;max-width:34rem;margin-left:auto;margin-right:auto}
+
+footer{background:var(--sage-deep);color:#c9c4ae;text-align:center;padding:18px;font-size:.82rem;margin-top:20px}
+footer a{color:#d9d4bf}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header>
+  <div class="nav-wrap">
+    <a class="brand" href="index.html" aria-label="North Park Acupuncture home">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C10 9 6 15 6 21a10 10 0 0 0 20 0c0-6-4-12-10-18z" fill="#5f7f63"/><path d="M16 8v18M10 14l6-4 6 4" stroke="#faf8f1" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+      North Park Acupuncture
+    </a>
+    <a class="back-link" href="index.html">&larr; Back to home</a>
+  </div>
+</header>
+
+<main id="main">
+  <div class="page-head">
+    <h1>Book an Appointment</h1>
+    <p>Tell us about yourself — it takes about two minutes.</p>
+  </div>
+
+  <ol class="progress" aria-label="Booking progress">
+    <li data-n="1" id="pi-1" class="active">Your details</li>
+    <li data-n="2" id="pi-2">Visit details</li>
+    <li data-n="3" id="pi-3">Review</li>
+  </ol>
+
+  <form id="bookForm" class="card" novalidate aria-live="polite">
+    <!-- STEP 1 -->
+    <div class="step current" data-step="1" role="group" aria-labelledby="s1h">
+      <h2 id="s1h">Your details</h2>
+      <p class="step-sub">Step 1 of 3 — we use this to verify your insurance and reach you.</p>
+
+      <div class="field" data-field="fullName">
+        <label for="fullName">Full name <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="fullName" name="fullName" autocomplete="name" required>
+        <p class="error">Please enter your full name.</p>
+      </div>
+
+      <div class="field-row two">
+        <div class="field" data-field="dob">
+          <label for="dob">Date of birth <span class="req" aria-hidden="true">*</span></label>
+          <input type="date" id="dob" name="dob" required>
+          <p class="error">Please enter your date of birth.</p>
+        </div>
+        <div class="field" data-field="phone">
+          <label for="phone">Contact number <span class="req" aria-hidden="true">*</span></label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(619) 555-0100" required>
+          <p class="error">Please enter a valid phone number.</p>
+        </div>
+      </div>
+
+      <div class="field" data-field="email">
+        <label for="email">Email address <span class="req" aria-hidden="true">*</span></label>
+        <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+        <p class="error">Please enter a valid email address.</p>
+      </div>
+
+      <div class="field" data-field="street">
+        <label for="street">Street address <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="street" name="street" autocomplete="street-address" required>
+        <p class="error">Please enter your street address.</p>
+      </div>
+      <div class="field-row three">
+        <div class="field" data-field="city">
+          <label for="city">City <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="city" name="city" autocomplete="address-level2" required>
+          <p class="error">Required.</p>
+        </div>
+        <div class="field" data-field="state">
+          <label for="state">State <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="state" name="state" autocomplete="address-level1" value="CA" required>
+          <p class="error">Required.</p>
+        </div>
+        <div class="field" data-field="zip">
+          <label for="zip">ZIP <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="zip" name="zip" autocomplete="postal-code" inputmode="numeric" required>
+          <p class="error">Required.</p>
+        </div>
+      </div>
+
+      <div class="field" data-field="insFront">
+        <label id="insLabel">Insurance card <span class="req" aria-hidden="true">*</span></label>
+        <label class="upload-box" for="insFront" aria-labelledby="insLabel">
+          <input type="file" id="insFront" name="insFront" accept="image/*" capture="environment" required aria-describedby="insHint">
+          <strong>Tap to photograph your insurance card (front)</strong>
+          <small id="insHint">Uses your camera on mobile, or choose a photo file. JPG/PNG.</small>
+          <span class="file-name" id="insFrontName"></span>
+        </label>
+        <p class="error">Please add a photo of your insurance card.</p>
+      </div>
+      <div class="field">
+        <label class="upload-box" for="insBack">
+          <input type="file" id="insBack" name="insBack" accept="image/*" capture="environment" aria-describedby="insBackHint">
+          <strong>Insurance card (back) — optional</strong>
+          <small id="insBackHint">Helps us verify benefits faster.</small>
+          <span class="file-name" id="insBackName"></span>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" data-next="2">Next</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" data-step="2" role="group" aria-labelledby="s2h">
+      <h2 id="s2h">Visit details</h2>
+      <p class="step-sub">Step 2 of 3 — tell us what brings you in.</p>
+
+      <div class="field">
+        <label id="ptypeLabel">Are you a new or returning patient?</label>
+        <div class="radio-row" role="radiogroup" aria-labelledby="ptypeLabel">
+          <label class="radio-pill"><input type="radio" name="patientType" value="New patient" checked><span>New patient</span></label>
+          <label class="radio-pill"><input type="radio" name="patientType" value="Returning patient"><span>Returning patient</span></label>
+        </div>
+      </div>
+
+      <div class="field" data-field="reason">
+        <label for="reason">Reason for visit <span class="req" aria-hidden="true">*</span></label>
+        <select id="reason" name="reason" required>
+          <option value="">Choose one…</option>
+          <option>Pain management</option>
+          <option>Stress &amp; anxiety</option>
+          <option>Sleep support</option>
+          <option>Women&rsquo;s health</option>
+          <option>Headaches &amp; migraines</option>
+          <option>Orthopedic concerns</option>
+          <option>Fertility support</option>
+          <option>Healthy aging</option>
+          <option>Something else</option>
+        </select>
+        <p class="error">Please choose a reason for your visit.</p>
+      </div>
+
+      <div class="field-row two">
+        <div class="field" data-field="prefDate">
+          <label for="prefDate">Preferred date <span class="req" aria-hidden="true">*</span></label>
+          <input type="date" id="prefDate" name="prefDate" required>
+          <p class="error">Please pick a date.</p>
+        </div>
+        <div class="field">
+          <label for="prefTime">Preferred time</label>
+          <select id="prefTime" name="prefTime">
+            <option>Morning</option>
+            <option>Afternoon</option>
+            <option>Evening</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="notes">Anything we should know? <span style="font-weight:400;color:#8a937f">(optional)</span></label>
+        <textarea id="notes" name="notes" placeholder="Symptoms, injuries, questions…"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" data-back="1">Back</button>
+        <button type="button" class="btn btn-primary" data-next="3">Next</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" data-step="3" role="group" aria-labelledby="s3h">
+      <h2 id="s3h">Review &amp; confirm</h2>
+      <p class="step-sub">Step 3 of 3 — check everything looks right.</p>
+      <div class="review-box"><dl id="reviewList"></dl></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" data-back="2">Back</button>
+        <button type="submit" class="btn btn-primary">Confirm Request</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="step" data-step="4" role="group" aria-labelledby="s4h">
+      <div class="success">
+        <span class="check" aria-hidden="true">✓</span>
+        <h2 id="s4h">Request received!</h2>
+        <p id="successMsg">Thanks — our office will call you shortly to verify your insurance and confirm your appointment time.</p>
+        <p>Questions in the meantime? Call us at <a href="tel:+16192946616" style="color:var(--sage-dark);font-weight:700">(619) 294-6616</a>.</p>
+        <a class="btn btn-ghost" href="index.html">Back to home</a>
+      </div>
+    </div>
+  </form>
+
+  <p class="alt-path">Prefer to pick your own time right now? <a href="https://northparkacupuncture.janeapp.com" target="_blank" rel="noopener">Book directly through Jane &rarr;</a></p>
+  <p class="privacy">Your details are used only to arrange your visit and verify insurance. We never share your information.</p>
+</main>
+
+<footer>
+  &copy; 2026 North Park Acupuncture · San Diego, CA · <a href="tel:+16192946616">(619) 294-6616</a>
+</footer>
+
+<script>
+(function(){
+  var form = document.getElementById('bookForm');
+  var steps = Array.prototype.slice.call(form.querySelectorAll('.step'));
+  var current = 1;
+
+  // Date bounds: DOB cannot be in the future; preferred date cannot be in the past
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('dob').max = today;
+  document.getElementById('prefDate').min = today;
+
+  function fileLabel(input, labelId){
+    input.addEventListener('change', function(){
+      var el = document.getElementById(labelId);
+      if(input.files && input.files.length){
+        el.textContent = '✓ ' + input.files[0].name;
+        el.style.display = 'block';
+      } else { el.style.display = 'none'; }
+    });
+  }
+  fileLabel(document.getElementById('insFront'), 'insFrontName');
+  fileLabel(document.getElementById('insBack'), 'insBackName');
+
+  function setProgress(n){
+    [1,2,3].forEach(function(i){
+      var li = document.getElementById('pi-' + i);
+      li.classList.toggle('active', i === n);
+      li.classList.toggle('done', i < n);
+    });
+  }
+
+  function show(n){
+    current = n;
+    steps.forEach(function(s){
+      var on = parseInt(s.getAttribute('data-step'), 10) === n;
+      s.classList.toggle('current', on);
+      s.setAttribute('aria-hidden', on ? 'false' : 'true');
+    });
+    setProgress(Math.min(n, 3));
+    var heading = form.querySelector('.step.current h2, .step.current h1');
+    if(heading){ heading.setAttribute('tabindex', '-1'); heading.focus({preventScroll:true}); }
+    form.scrollIntoView({block:'start', behavior:'smooth'});
+  }
+
+  function markInvalid(fieldEl, bad){
+    fieldEl.classList.toggle('invalid', bad);
+    return !bad;
+  }
+
+  function validateStep(n){
+    var ok = true;
+    var scope = form.querySelector('.step[data-step="' + n + '"]');
+    Array.prototype.forEach.call(scope.querySelectorAll('.field[data-field]'), function(f){
+      var input = f.querySelector('input, select, textarea');
+      var bad = false;
+      if(input.hasAttribute('required')){
+        if(input.type === 'file'){ bad = !(input.files && input.files.length); }
+        else if(input.type === 'email'){ bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim()); }
+        else if(input.type === 'tel'){ bad = input.value.replace(/\D/g,'').length < 7; }
+        else if(input.type === 'date' && input.id === 'prefDate'){ bad = !input.value || input.value < today; }
+        else { bad = !input.value.trim(); }
+      }
+      ok = markInvalid(f, bad) && ok;
+    });
+    if(!ok){
+      var firstBad = scope.querySelector('.field.invalid input, .field.invalid select');
+      if(firstBad) firstBad.focus();
+    }
+    return ok;
+  }
+
+  form.addEventListener('input', function(e){
+    var f = e.target.closest('.field');
+    if(f) f.classList.remove('invalid');
+  });
+
+  var LABELS = {fullName:'Name', dob:'Date of birth', phone:'Contact number', email:'Email', street:'Street', city:'City', state:'State', zip:'ZIP', patientType:'Patient type', reason:'Reason for visit', prefDate:'Preferred date', prefTime:'Preferred time', notes:'Notes'};
+
+  function val(id){
+    var el = document.getElementById(id);
+    if(!el) return '';
+    if(el.type === 'file') return (el.files && el.files.length) ? el.files[0].name : '—';
+    return el.value.trim() || '—';
+  }
+
+  function buildReview(){
+    var dl = document.getElementById('reviewList');
+    dl.innerHTML = '';
+    var pt = form.querySelector('input[name=patientType]:checked');
+    var rows = [
+      ['fullName'], ['dob'], ['phone'], ['email'],
+      ['address', val('street') + ', ' + val('city') + ', ' + val('state') + ' ' + val('zip')],
+      ['insFront', 'Insurance card front'],
+      ['patientType', pt ? pt.value : '—'], ['reason'], ['prefDate'], ['prefTime'], ['notes']
+    ];
+    rows.forEach(function(r){
+      var label = LABELS[r[0]] || r[0];
+      var value = r.length > 1 ? r[1] : val(r[0]);
+      if(r[0] === 'notes' && value === '—') return;
+      var dt = document.createElement('dt'); dt.textContent = label;
+      var dd = document.createElement('dd'); dd.textContent = value;
+      dl.appendChild(dt); dl.appendChild(dd);
+    });
+  }
+
+  form.addEventListener('click', function(e){
+    var next = e.target.closest('[data-next]');
+    var back = e.target.closest('[data-back]');
+    if(next){
+      var n = parseInt(next.getAttribute('data-next'), 10);
+      if(validateStep(current)){
+        if(n === 3) buildReview();
+        show(n);
+      }
+    } else if(back){
+      show(parseInt(back.getAttribute('data-back'), 10));
+    }
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = val('fullName').split(' ')[0] || 'there';
+    document.getElementById('successMsg').textContent =
+      'Thanks ' + name + ' — our office will call you at ' + val('phone') +
+      ' shortly to verify your insurance and confirm your appointment time.';
+    show(4);
+  });
+})();
+</script>
+</body>
+</html>
