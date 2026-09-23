@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>North Park Acupuncture | San Diego</title>
+<meta name="description" content="Gentle, personalized acupuncture in San Diego for pain, stress, sleep, women's health, and whole-person wellbeing. Book your visit at North Park Acupuncture.">
+<style>
+:root{
+  --sage:#5f7f63; --sage-dark:#42584a; --sage-deep:#31453a;
+  --cream:#faf8f1; --paper:#ffffff; --ink:#24332a; --ink-soft:#4c5d51;
+  --gold:#c9a86a; --radius:18px; --shadow:0 10px 30px rgba(49,69,58,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--cream);color:var(--ink);line-height:1.6}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:var(--sage-deep);line-height:1.25}
+.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip-link:focus{left:12px;top:12px;width:auto;height:auto;background:var(--sage-deep);color:#fff;padding:10px 16px;border-radius:8px;z-index:100}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* Header */
+header{position:sticky;top:0;z-index:50;background:rgba(250,248,241,.97);backdrop-filter:blur(6px);border-bottom:1px solid #e4ded0}
+.nav-wrap{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--sage-deep);font-family:Georgia,serif;font-size:1.15rem;font-weight:bold}
+nav ul{list-style:none;display:flex;gap:6px;flex-wrap:wrap}
+nav a{text-decoration:none;color:var(--sage-deep);font-weight:600;padding:10px 14px;border-radius:10px;display:inline-block}
+nav a:hover{background:#ece7d7}
+.phone-btn{background:var(--sage-dark);color:#fff!important}
+.phone-btn:hover{background:var(--sage-deep)}
+
+/* Hero */
+.hero{background:linear-gradient(160deg,#eef2e7 0%,#dde7d4 55%,#cfdcc4 100%);overflow:hidden}
+.hero-inner{max-width:1100px;margin:0 auto;padding:64px 20px 56px;display:grid;gap:28px;align-items:center}
+@media(min-width:820px){.hero-inner{grid-template-columns:1.2fr .8fr;padding:88px 20px 72px}}
+.eyebrow{display:inline-block;background:#fff;color:var(--sage-dark);font-weight:700;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:16px;box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);margin-bottom:14px}
+.hero p.lead{font-size:1.15rem;color:var(--ink-soft);max-width:34rem;margin-bottom:26px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;padding:14px 26px;border-radius:999px;font-weight:700;text-decoration:none;font-size:1rem;min-height:48px}
+.btn-primary{background:var(--sage-dark);color:#fff;box-shadow:var(--shadow)}
+.btn-primary:hover{background:var(--sage-deep)}
+.btn-ghost{border:2px solid var(--sage-dark);color:var(--sage-deep);background:transparent}
+.btn-ghost:hover{background:var(--sage-dark);color:#fff}
+.hero-art{display:flex;justify-content:center}
+.hero-art svg{width:min(320px,80%);height:auto;filter:drop-shadow(0 14px 24px rgba(49,69,58,.18))}
+
+/* Card grid */
+main{max-width:1100px;margin:0 auto;padding:48px 20px 24px}
+.section-title{text-align:center;margin-bottom:8px;font-size:1.9rem}
+.section-sub{text-align:center;color:var(--ink-soft);max-width:40rem;margin:0 auto 32px}
+.grid{display:grid;gap:20px;grid-template-columns:1fr}
+@media(min-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1020px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--paper);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);border-top:5px solid var(--sage);scroll-margin-top:90px;display:flex;flex-direction:column}
+.card h2{font-size:1.5rem;margin:14px 0 10px}
+.card p,.card li{color:var(--ink-soft);font-size:.98rem}
+.card ul{list-style:none;margin-top:10px}
+.card li{padding:7px 0;border-bottom:1px dashed #e0d9c6;display:flex;gap:8px;align-items:baseline}
+.card li:last-child{border-bottom:none}
+.card li::before{content:"•";color:var(--sage);font-weight:bold}
+.icon{width:52px;height:52px;border-radius:14px;background:#eef2e7;display:flex;align-items:center;justify-content:center;flex:none}
+.icon svg{width:28px;height:28px}
+.card-book{background:linear-gradient(150deg,var(--sage-dark),var(--sage-deep));border-top-color:var(--gold)}
+.card-book h2,.card-book p,.card-book li{color:#f4f1e6}
+.card-book li::before{color:var(--gold)}
+.card-book .icon{background:rgba(255,255,255,.14)}
+.card-book .btn-primary{background:#fff;color:var(--sage-deep);margin-top:auto;align-self:flex-start}
+.card-book .btn-primary:hover{background:var(--gold);color:#fff}
+.stars{color:var(--gold);font-size:1.25rem;letter-spacing:.15em}
+.rating-line{font-weight:700;color:var(--ink);margin:8px 0 14px}
+blockquote{border-left:4px solid var(--sage);padding:10px 14px;margin:12px 0;background:#f6f4ec;border-radius:0 12px 12px 0;font-style:italic;color:var(--ink-soft)}
+blockquote footer{font-style:normal;font-size:.85rem;color:#8a937f;margin-top:6px}
+.plan-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.plan-pills span{background:#eef2e7;border-radius:999px;padding:6px 12px;font-size:.85rem;color:var(--sage-deep);font-weight:600}
+.contact-line{display:flex;gap:12px;align-items:flex-start;margin:10px 0}
+.contact-line svg{width:22px;height:22px;flex:none;margin-top:4px}
+.contact-line a{color:var(--sage-dark);font-weight:700;text-decoration:none}
+.contact-line a:hover{text-decoration:underline}
+
+/* Footer */
+footer{background:var(--sage-deep);color:#e9e6d8;margin-top:48px}
+.footer-inner{max-width:1100px;margin:0 auto;padding:36px 20px;display:grid;gap:20px}
+@media(min-width:700px){.footer-inner{grid-template-columns:1fr 1fr 1fr}}
+footer h3{color:#fff;font-size:1.05rem;margin-bottom:10px}
+footer a{color:#d9d4bf;text-decoration:none}
+footer a:hover{text-decoration:underline}
+footer p,footer li{font-size:.92rem;list-style:none}
+.copyright{border-top:1px solid rgba(255,255,255,.15);padding:16px 20px;text-align:center;font-size:.85rem;color:#c9c4ae;max-width:1100px;margin:0 auto}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header>
+  <div class="nav-wrap">
+    <a class="brand" href="#top" aria-label="North Park Acupuncture home">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C10 9 6 15 6 21a10 10 0 0 0 20 0c0-6-4-12-10-18z" fill="#5f7f63"/><path d="M16 8v18M10 14l6-4 6 4" stroke="#faf8f1" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+      North Park Acupuncture
+    </a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#patients">Patients</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a class="phone-btn" href="tel:+16192946616">(619) 294-6616</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero-inner">
+    <div>
+      <span class="eyebrow">San Diego · Acupuncture &amp; Integrative Care</span>
+      <h1 id="hero-title">Helping you achieve optimal wellbeing.</h1>
+      <p class="lead">Gentle, personalized acupuncture for pain, stress, sleep, women&rsquo;s health, and whole-person wellbeing.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://northparkacupuncture.janeapp.com" target="_blank" rel="noopener">Book an Appointment</a>
+        <a class="btn btn-ghost" href="#services">Explore Services</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="#ffffff" opacity=".55"/><path d="M100 22c-32 26-52 52-52 78a52 52 0 0 0 104 0c0-26-20-52-52-78z" fill="#5f7f63"/><path d="M100 52v96M78 84l22-14 22 14M78 116l22-14 22 14" stroke="#eef2e7" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+</section>
+
+<main id="main">
+  <h2 class="section-title">Care, all in one place</h2>
+  <p class="section-sub">Safe, natural, individualized care in a peaceful North Park sanctuary. Your care starts with being heard.</p>
+
+  <div class="grid">
+    <section class="card" id="services" aria-labelledby="services-h">
+      <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5f7f63" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></div>
+      <h2 id="services-h">Services</h2>
+      <p>Traditional medicine for modern life. Your practitioner may draw from one or several complementary techniques:</p>
+      <ul>
+        <li>Acupuncture — fine, sterile needles at carefully selected points</li>
+        <li>Cupping therapy — gentle suction complementing hands-on care</li>
+        <li>Gua sha — traditional hands-on technique</li>
+        <li>Moxibustion — warming technique for your care plan</li>
+        <li>Electroacupuncture — gentle stimulation when appropriate</li>
+        <li>Herbal medicine — traditional formulas for your health needs</li>
+        <li>Auricular therapy — focused treatment of points on the ear</li>
+        <li>Lifestyle guidance — practical nutrition and wellness tips</li>
+      </ul>
+    </section>
+
+    <section class="card" id="patients" aria-labelledby="patients-h">
+      <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5f7f63" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <h2 id="patients-h">Patients</h2>
+      <p>We accept a variety of plans and verify your acupuncture coverage individually before your visit:</p>
+      <div class="plan-pills">
+        <span>Aetna</span><span>Anthem Blue Cross</span><span>Blue Shield of California</span><span>Cigna</span><span>Health Net</span><span>Kaiser Permanente</span><span>Medicare</span><span>SCAN Health Plan</span><span>Sharp Health Plan</span><span>Tricare</span><span>UnitedHealthcare</span>
+      </div>
+      <p style="margin-top:14px"><strong>Check your benefits before your visit.</strong> Call the office and we&rsquo;ll verify your plan: <a href="tel:+16192946616" style="color:var(--sage-dark);font-weight:700">(619) 294-6616</a></p>
+    </section>
+
+    <section class="card" id="about" aria-labelledby="about-h">
+      <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5f7f63" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <h2 id="about-h">About Us</h2>
+      <p><strong>Namrata Sakya</strong> · Licensed Acupuncturist · San Diego, CA</p>
+      <p style="margin-top:10px">More than 20 years across research, clinical practice, and education — dedicated to achieving your optimal health through safe and natural means, including acupuncture, Chinese herbs, and functional medicine.</p>
+      <p style="margin-top:10px"><strong>Specialties:</strong> Acupuncture, Heat Therapy, and Manual Therapy.</p>
+      <p style="margin-top:10px">Voted San Diego&rsquo;s <strong>Best Place to Get Acupuncture</strong> by CityBeat readers.</p>
+    </section>
+
+    <section class="card card-book" id="book" aria-labelledby="book-h">
+      <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+      <h2 id="book-h">Book Now</h2>
+      <p>New and returning patients can schedule directly through Jane. Choose a time that works for you, with no extra steps.</p>
+      <ul>
+        <li>First visit: about 90 minutes, calm and unhurried</li>
+        <li>Follow-ups: about an hour</li>
+      </ul>
+      <a class="btn btn-primary" href="https://northparkacupuncture.janeapp.com" target="_blank" rel="noopener">Book an Appointment</a>
+    </section>
+
+    <section class="card" id="reviews" aria-labelledby="reviews-h">
+      <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#c9a86a" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></div>
+      <h2 id="reviews-h">Reviews</h2>
+      <div class="stars" role="img" aria-label="4.9 out of 5 stars">★★★★★</div>
+      <p class="rating-line">4.9 — 22 reviews on Birdeye</p>
+      <blockquote>&ldquo;I always feel great when I leave here — best acupuncture experience I&rsquo;ve ever had.&rdquo;<footer>— Anonymous patient review</footer></blockquote>
+      <blockquote>&ldquo;Wonderful and caring people — I walked in with my mind going a mile a minute and left feeling so relaxed.&rdquo;<footer>— Anonymous patient review</footer></blockquote>
+      <blockquote>&ldquo;Acupuncture, cupping, and massage — the best healing hands, amazing relaxation.&rdquo;<footer>— Anonymous patient review</footer></blockquote>
+    </section>
+
+    <section class="card" id="contact" aria-labelledby="contact-h">
+      <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5f7f63" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <h2 id="contact-h">Contact</h2>
+      <div class="contact-line">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#5f7f63" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <p><strong>North Park Acupuncture</strong><br>3080 North Park Way<br>San Diego, CA 92104<br><a href="https://www.google.com/maps/search/?api=1&amp;query=North+Park+Acupuncture+3080+North+Park+Way+San+Diego+CA" target="_blank" rel="noopener">Get directions</a></p>
+      </div>
+      <div class="contact-line">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#5f7f63" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <p><a href="tel:+16192946616">(619) 294-6616</a><br>Call to check your benefits or ask questions.</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h3>North Park Acupuncture</h3>
+      <p>Helping you achieve optimal wellbeing — gentle, personalized acupuncture in the heart of North Park, San Diego.</p>
+    </div>
+    <div>
+      <h3>Visit</h3>
+      <ul>
+        <li>3080 North Park Way</li>
+        <li>San Diego, CA 92104</li>
+        <li><a href="tel:+16192946616">(619) 294-6616</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Quick links</h3>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#patients">Patients</a></li>
+        <li><a href="https://northparkacupuncture.janeapp.com" target="_blank" rel="noopener">Book an Appointment</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">&copy; 2026 North Park Acupuncture · San Diego, CA</div>
+</footer>
+</body>
+</html>
